@@ -450,4 +450,10 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
+<<<<<<< HEAD
 >>>>>>> fe934db (Initial commit)
+=======
+build_files
+raylib-master
+Makefile
+>>>>>>> 1c30e84 (linux info, ignores)
