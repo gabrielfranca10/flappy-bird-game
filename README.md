@@ -1,4 +1,6 @@
+<<<<<<< HEAD
 
 
 # raylib-quickstart
+
 
