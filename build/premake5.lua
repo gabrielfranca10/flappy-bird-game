@@ -7,13 +7,49 @@ newoption
 		{ "opengl11", "OpenGL 1.1"},
 		{ "opengl21", "OpenGL 2.1"},
 		{ "opengl33", "OpenGL 3.3"},
-		{ "opengl43", "OpenGL 4.3"}
+		{ "opengl43", "OpenGL 4.3"},
+		{ "openges2", "OpenGL ES2"},
+		{ "openges3", "OpenGL ES3"}
 	},
 	default = "opengl33"
 }
 
+
+function download_progress(total, current)
+    local ratio = current / total;
+    ratio = math.min(math.max(ratio, 0), 1);
+    local percent = math.floor(ratio * 100);
+    print("Download progress (" .. percent .. "%/100%)")
+end
+
+function check_raylib()
+    os.chdir("external")
+    if(os.isdir("raylib-master") == false) then
+        if(not os.isfile("raylib-master.zip")) then
+            print("Raylib not found, downloading from github")
+            local result_str, response_code = http.download("https://github.com/raysan5/raylib/archive/refs/heads/master.zip", "raylib-master.zip", {
+                progress = download_progress,
+                headers = { "From: Premake", "Referer: Premake" }
+            })
+        end
+        print("Unzipping to " ..  os.getcwd())
+        zip.extract("raylib-master.zip", os.getcwd())
+        os.remove("raylib-master.zip")
+    end
+    os.chdir("../")
+end
+
+function build_externals()
+     print("calling externals")
+     check_raylib()
+end
+
 function platform_defines()
-    defines{"PLATFORM_DESKTOP"}
+    filter {"configurations:Debug or Release"}
+        defines{"PLATFORM_DESKTOP"}
+
+    filter {"configurations:Debug_RGFW or Release_RGFW"}
+        defines{"PLATFORM_DESKTOP_RGFW"}
 
     filter {"options:graphics=opengl43"}
         defines{"GRAPHICS_API_OPENGL_43"}
@@ -51,7 +87,10 @@ function platform_defines()
     filter{}
 end
 
- raylib_dir = "external/raylib-master"
+
+-- if you don't want to download raylib, then set this to false, and set the raylib dir to where you want raylib to be pulled from, must be full sources.
+downloadRaylib = true
+raylib_dir = "external/raylib-master"
 
 workspaceName = 'MyGame'
 baseName = path.getbasename(path.getdirectory(os.getcwd()));
@@ -64,18 +103,27 @@ if (os.isdir('build_files') == false) then
     os.mkdir('build_files')
 end
 
+
+if (os.isdir('external') == false) then
+    os.mkdir('external')
+end
+
+
 workspace (workspaceName)
     location "../"
-    configurations { "Debug", "Release"}
+    configurations { "Debug", "Release", "Debug_RGFW", "Release_RGFW"}
+
     platforms { "x64", "x86", "ARM64"}
 
     defaultplatform ("x64")
 
-    filter "configurations:Debug"
+
+    filter "configurations:Debug or Debug_RGFW"
         defines { "DEBUG" }
         symbols "On"
 
-    filter "configurations:Release"
+    filter "configurations:Release or Release_RGFW"
+
         defines { "NDEBUG" }
         optimize "On"
 
@@ -89,20 +137,30 @@ workspace (workspaceName)
 
     targetdir "bin/%{cfg.buildcfg}/"
 
-    include ("external/premake_external.lua")
+
+if (downloadRaylib) then
     build_externals()
+	end
+
+    startproject(workspaceName)
 
     project (workspaceName)
         kind "ConsoleApp"
         location "build_files/"
         targetdir "../bin/%{cfg.buildcfg}"
 
+
+        filter {"system:windows", "configurations:Release or Release_RGFW", "action:gmake*"}
+            kind "WindowedApp"
+            buildoptions { "-Wl,--subsystem,windows" }
+
+        filter {"system:windows", "configurations:Release or Release_RGFW", "action:vs*"}
+            kind "WindowedApp"
+            entrypoint "mainCRTStartup"
+
         filter "action:vs*"
             debugdir "$(SolutionDir)"
 
-        filter {"action:vs*", "configurations:Release"}
-            kind "WindowedApp"
-            entrypoint "mainCRTStartup"
 
         filter{}
 
@@ -118,21 +176,29 @@ workspace (workspaceName)
 
         links {"raylib"}
 
+        cdialect "C17"
+        cppdialect "C++17"
+
         includedirs {raylib_dir .. "/src" }
         includedirs {raylib_dir .."/src/external" }
         includedirs { raylib_dir .."/src/external/glfw/include" }
+        flags { "ShadowedVariables"}
         platform_defines()
 
         filter "action:vs*"
             defines{"_WINSOCK_DEPRECATED_NO_WARNINGS", "_CRT_SECURE_NO_WARNINGS"}
             dependson {"raylib"}
             links {"raylib.lib"}
-            characterset ("MBCS")
+
+            characterset ("Unicode")
+
             buildoptions { "/Zc:__cplusplus" }
 
         filter "system:windows"
             defines{"_WIN32"}
-            links {"winmm", "gdi32"}
+
+            links {"winmm", "gdi32", "opengl32"}
+
             libdirs {"../bin/%{cfg.buildcfg}"}
 
         filter "system:linux"
@@ -142,6 +208,8 @@ workspace (workspaceName)
             links {"OpenGL.framework", "Cocoa.framework", "IOKit.framework", "CoreFoundation.framework", "CoreAudio.framework", "CoreVideo.framework", "AudioToolbox.framework"}
 
         filter{}
+
+		
 
     project "raylib"
         kind "StaticLib"
@@ -155,7 +223,8 @@ workspace (workspaceName)
 
         filter "action:vs*"
             defines{"_WINSOCK_DEPRECATED_NO_WARNINGS", "_CRT_SECURE_NO_WARNINGS"}
-            characterset ("MBCS")
+
+            characterset ("Unicode")
             buildoptions { "/Zc:__cplusplus" }
         filter{}
 
