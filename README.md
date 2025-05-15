@@ -2,6 +2,12 @@
 # Raylib-Quickstart
 Work in process quickstart for raylib using premake
 
+# VSCode Users
+* Download the quickstart
+* Rename the folder to your game name
+* Open the folder in VSCode.
+* Press F5 to build
+* You are good to go.
 
 
 # Windows Users
