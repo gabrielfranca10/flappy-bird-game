@@ -1,65 +1,61 @@
 {
+    "version": 4,
     "configurations": [
         {
-            "name": "Win32",
-            "includePath": [
-                "${workspaceFolder}/build/external/raylib-master/src/**",
-                "${workspaceFolder}/include/**",
-                "${workspaceFolder}/src/**"
+            "name": "Debug",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/bin/Debug/${workspaceFolderBasename}.exe",
+            "args": [],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}",
+            "environment": [],
+            "externalConsole": false,
+            "MIMode": "gdb",
+            "setupCommands": [
+                {
+                    "description": "Enable pretty-printing for gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": false
+                }
             ],
-            "defines": [
-                "_DEBUG",
-                "UNICODE",
-                "_UNICODE",
-                "GRAPHICS_API_OPENGL_33",
-                "PLATFORM_DESKTOP"
-            ],
-            "cStandard": "c17",
-            "cppStandard": "c++17",
-            "intelliSenseMode": "gcc-x64"
+            "windows": {
+                "miDebuggerPath": "gdb.exe"
+            },
+            "osx": {
+                "program": "${workspaceFolder}/bin/Debug/${workspaceFolderBasename}",
+                "MIMode": "lldb"
+            },
+            "linux": {
+                "program": "${workspaceFolder}/bin/Debug/${workspaceFolderBasename}",
+                "miDebuggerPath": "/usr/bin/gdb"
+            },
+            "preLaunchTask": "build debug"
         },
         {
-            "name": "Mac",
-            "includePath": [
-                "${workspaceFolder}/build/external/raylib-master/src/**",
-                "${workspaceFolder}/include/**",
-                "${workspaceFolder}/src/**"
-            ],
-            "defines": [
-                "_DEBUG",
-                "UNICODE",
-                "_UNICODE",
-                "GRAPHICS_API_OPENGL_33",
-                "PLATFORM_DESKTOP"
-            ],
-            "macFrameworkPath": [
-                "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks"
-            ],
-            "compilerPath": "/usr/bin/clang",
-            "cStandard": "c17",
-            "cppStandard": "c++17",
-            "intelliSenseMode": "clang-x64"
-        },
-        {
-            "name": "Linux",
-            "includePath": [
-                "${workspaceFolder}/build/external/raylib-master/src/**",
-                "${workspaceFolder}/include/**",
-                "${workspaceFolder}/src/**"
-            ],
-            "defines": [
-                "_DEBUG",
-                "UNICODE",
-                "_UNICODE",
-                "GRAPHICS_API_OPENGL_33",
-                "PLATFORM_DESKTOP"
-            ],
-            "compilerPath": "/usr/bin/clang",
-            "cStandard": "c17",
-            "cppStandard": "c++17",
-            "intelliSenseMode": "clang-x64"
-
+            "name": "Run",
+            "type": "cppdbg",
+            "request": "launch",
+            "args": [],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}",
+            "environment": [],
+            "externalConsole": false,
+            "program": "${workspaceFolder}/bin/Release/${workspaceFolderBasename}.exe",
+            "MIMode": "gdb",
+            "windows": {
+                "program": "${workspaceFolder}/bin/Release/${workspaceFolderBasename}.exe",
+                "miDebuggerPath": "gdb.exe"
+            },
+            "osx": {
+                "program": "${workspaceFolder}/bin/Release/${workspaceFolderBasename}",
+                "MIMode": "lldb"
+            },
+            "linux": {
+                "program": "${workspaceFolder}/bin/Release/${workspaceFolderBasename}",
+                "miDebuggerPath": "/usr/bin/gdb"
+            },
+            "preLaunchTask": "build release"
         }
-    ],
-    "version": 4
+    ]
 }

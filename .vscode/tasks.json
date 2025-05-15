@@ -9,7 +9,6 @@
             "command": "make",
             "windows": {
                 "command": "mingw32-make.exe",
-
             },
             "osx": {
                 "args": [
@@ -32,7 +31,6 @@
             "windows": {
                 "command": "mingw32-make.exe",
                 "args": [
-
                     "config=release_x64"
                 ],
             },
@@ -43,7 +41,6 @@
             },
             "osx": {
                 "args": [
-
                     "config=release_arm64"
                 ],
             },
@@ -101,6 +98,4 @@
             "group": "build"
         }
     ]
-
 }
-
