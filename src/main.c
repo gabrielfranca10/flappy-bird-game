@@ -1,33 +1,37 @@
-/*
-Raylib example file.
-This is an example main file for a simple raylib project.
-Use this as a starting point or replace it with your code.
-
-by Jeffery Myers is marked with CC0 1.0. To view a copy of this license, visit https://creativecommons.org/publicdomain/zero/1.0/
-
-*/
-
 #include "raylib.h"
+#include <stdlib.h>
+#include <time.h>
+#include "../include/cano.h"
 
-#include "resource_dir.h"	// utility header for SearchAndSetResourceDir
+int main(void) {
+    const int screenWidth = 800;
+    const int screenHeight = 600;
+    const int larguraCano = 60;
 
-int main (void) {
-	
-	// Inicializando o  tamanho da tela do jogo
-	const int screenWidth = 800; 
-	const int screenHeight = 600;
+    InitWindow(screenWidth, screenHeight, "Teste desenharCanos - Raylib");
+    SetTargetFPS(60);
 
-	InitWindow(screenWidth, screenHeight, "Flappy Bird - Raylib");
+    srand(time(NULL));
 
-	while (!WindowShouldClose()) {
-		BeginDrawing();
-		ClearBackground(RAYWHITE);
+    // Cria lista de canos
+    Cano* lista = NULL;
+    adicionarCano(&lista, 300, screenHeight, 150);
+    adicionarCano(&lista, 500, screenHeight, 150);
+    adicionarCano(&lista, 700, screenHeight, 150);
 
-		DrawText("Seja bem-vindo, Flappy Bird", 190, 200, 20, LIGHTGRAY);
+    while (!WindowShouldClose()) {
+        BeginDrawing();
+        ClearBackground(RAYWHITE);
 
-		EndDrawing();
-	}
+        // Chame sua função de desenhar canos (adaptada para Raylib)
+        desenharCanos(lista, screenHeight);
 
-	CloseWindow();
-	return 0;
+        DrawText("Testando desenharCanos (Raylib)", 180, 20, 20, DARKGRAY);
+
+        EndDrawing();
+    }
+
+    liberarCanos(lista);
+    CloseWindow();
+    return 0;
 }
