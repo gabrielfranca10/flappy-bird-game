@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "cano.h"
+#include "../include/cano.h"
 #include "raylib.h"
 
 Cano *criarCano(int x, int alturaTela, int alturaBuraco) {
