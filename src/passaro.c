@@ -5,6 +5,11 @@
 #include "../include/passaro.h"
 #include "../include/cano.h"
 
+#define GRAVIDADE 0.35f      // Gravidade mais leve para queda mais lenta
+#define FORCA_PULO -7.0f     // Pulo menos forte para subir devagar
+#define VELOCIDADE_MAX 6.5f  // Limite de velocidade para evitar queda rápida demais
+#define LARGURA_CANO 40      // Consistente com o cano.h
+
 void inicializarPassaro(Passaro* p, float x, float y) {
     p->x = x;
     p->y = y;
@@ -13,14 +18,20 @@ void inicializarPassaro(Passaro* p, float x, float y) {
     p->altura = 20;
 }
 
-void atualizarPassaro (Passaro* p) {
-    p->velocidadeY += 0.5; //Gravidade
+void atualizarPassaro(Passaro* p) {
+    p->velocidadeY += GRAVIDADE;
+
+    if (p->velocidadeY > VELOCIDADE_MAX) {
+        p->velocidadeY = VELOCIDADE_MAX;
+    }
+
     p->y += p->velocidadeY;
-    p->x += 1; //Movimento para frente (ajustar velocidade)
+
+    // REMOVIDO: p->x += 1; // Flappy Bird não anda para frente, só o cenário que se move
 }
 
 void pularPassaro(Passaro* p) {
-    p->velocidadeY = -8; //Força do pulo
+    p->velocidadeY = FORCA_PULO;
 }
 
 void desenharPassaro(Passaro* p) {
@@ -28,23 +39,22 @@ void desenharPassaro(Passaro* p) {
 }
 
 bool checarColisao(Passaro* p, Cano* canos, int alturaTela) {
-    //Checa a colisao do passaro com o cano
+    // Colisão com o topo e o chão da tela
     if (p->y < 0 || p->y + p->altura > alturaTela) {
-        return  true;
+        return true;
     }
-    
-    Cano * atual = canos;
 
-    //Checa colisão com cada cano
+    Cano* atual = canos;
+
     while (atual != NULL) {
-        //Verifica se o passaro esta na mesma coluna do cano (AJUSTAR PARA LARGURA DO CANO)
-        if (p->x + p->largura > atual->x && p->x < atual->x + 40) {
-            //Checa se esta fora do buraco
+        // Verifica se o pássaro está na faixa horizontal do cano
+        if (p->x + p->largura > atual->x && p->x < atual->x + LARGURA_CANO) {
+            // Verifica se o pássaro está fora do buraco (colidiu)
             if (p->y < atual->buracoY || p->y + p->altura > atual->buracoY + atual->alturaBuraco) {
-                return true; //Colidiu com o cano
+                return true;
             }
         }
         atual = atual->proximo;
     }
-    return  false;
+    return false;
 }

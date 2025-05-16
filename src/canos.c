@@ -4,6 +4,7 @@
 #include "raylib.h"
 
 #define LARGURA_CANO 40 // Define a largura do cano
+#define ESPACAMENTO_CANOS 200 // Espaçamento entre canos
 
 Cano *criarCano(int x, int alturaTela, int alturaBuraco) {
     Cano* novo = malloc(sizeof(Cano));

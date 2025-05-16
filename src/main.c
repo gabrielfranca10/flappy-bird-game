@@ -2,49 +2,55 @@
 #include <stdlib.h>
 #include <time.h>
 #include "../include/cano.h"
-#include "../include/passaro.h" // Inclua o header do passaro
+#include "../include/passaro.h"
+
+#define SCREEN_WIDTH 800
+#define SCREEN_HEIGHT 600
+#define ALTURA_BURACO 150
+#define DISTANCIA_ENTRE_CANOS 200
+#define LARGURA_CANO 40
 
 int main(void) {
-    const int screenWidth = 800;
-    const int screenHeight = 600;
-    const int larguraCano = 60;
-
-    InitWindow(screenWidth, screenHeight, "Flappy Bird - Raylib");
+    InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Flappy Bird - Raylib");
     SetTargetFPS(60);
 
     srand(time(NULL));
 
-    // Cria lista de canos
-    Cano* lista = NULL;
-    adicionarCano(&lista, 300, screenHeight, 150);
-    adicionarCano(&lista, 500, screenHeight, 150);
-    adicionarCano(&lista, 700, screenHeight, 150);
-
-    // Cria o pássaro
+    // Pássaro
     Passaro passaro;
     passaro.x = 100;
-    passaro.y = screenHeight / 2;
-    passaro.largura = 34; // ajuste conforme seu sprite
-    passaro.altura = 24;  // ajuste conforme seu sprite
+    passaro.y = SCREEN_HEIGHT / 2;
+    passaro.largura = 34;
+    passaro.altura = 24;
     passaro.velocidadeY = 0;
 
+    // Canos
+    Cano* listaCanos = NULL;
+    adicionarCano(&listaCanos, 400, SCREEN_HEIGHT, ALTURA_BURACO);
+    adicionarCano(&listaCanos, 600, SCREEN_HEIGHT, ALTURA_BURACO);
+    adicionarCano(&listaCanos, 800, SCREEN_HEIGHT, ALTURA_BURACO);
+
+    int framesDesdeUltimoCano = 0;
     bool gameOver = false;
 
     while (!WindowShouldClose()) {
         if (!gameOver) {
-            // Atualiza o pássaro
             atualizarPassaro(&passaro);
 
-            // Pulo
             if (IsKeyPressed(KEY_SPACE)) {
                 pularPassaro(&passaro);
             }
 
-            // Atualiza canos (se tiver lógica de movimento)
-            atualizarCanos(&lista);
+            atualizarCanos(&listaCanos);
 
-            // Checa colisão
-            if (checarColisao(&passaro, lista, screenHeight)) {
+            // Gera novo cano a cada DISTANCIA_ENTRE_CANOS pixels
+            framesDesdeUltimoCano++;
+            if (framesDesdeUltimoCano >= DISTANCIA_ENTRE_CANOS) {
+                adicionarCano(&listaCanos, SCREEN_WIDTH, SCREEN_HEIGHT, ALTURA_BURACO);
+                framesDesdeUltimoCano = 0;
+            }
+
+            if (checarColisao(&passaro, listaCanos, SCREEN_HEIGHT)) {
                 gameOver = true;
             }
         }
@@ -52,30 +58,31 @@ int main(void) {
         BeginDrawing();
         ClearBackground(RAYWHITE);
 
-        // Desenha canos
-        desenharCanos(lista, screenHeight);
-
-        // Desenha pássaro
+        desenharCanos(listaCanos, SCREEN_HEIGHT);
         desenharPassaro(&passaro);
 
         if (gameOver) {
-            DrawText("Game Over! Pressione R para reiniciar", 200, 250, 30, RED);
+            DrawText("Game Over! Pressione R para reiniciar", 180, 250, 30, RED);
             if (IsKeyPressed(KEY_R)) {
-                // Reinicia o jogo
                 passaro.x = 100;
-                passaro.y = screenHeight / 2;
+                passaro.y = SCREEN_HEIGHT / 2;
                 passaro.velocidadeY = 0;
                 gameOver = false;
-                // Reinicie os canos se necessário
+
+                liberarCanos(listaCanos);
+                listaCanos = NULL;
+                adicionarCano(&listaCanos, 400, SCREEN_HEIGHT, ALTURA_BURACO);
+                adicionarCano(&listaCanos, 600, SCREEN_HEIGHT, ALTURA_BURACO);
+                adicionarCano(&listaCanos, 800, SCREEN_HEIGHT, ALTURA_BURACO);
+                framesDesdeUltimoCano = 0;
             }
         }
 
         DrawText("Flappy Bird (Raylib)", 280, 20, 20, DARKGRAY);
-
         EndDrawing();
     }
 
-    liberarCanos(lista);
+    liberarCanos(listaCanos);
     CloseWindow();
     return 0;
 }
