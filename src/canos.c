@@ -3,6 +3,8 @@
 #include "../include/cano.h"
 #include "raylib.h"
 
+#define LARGURA_CANO 40 // Define a largura do cano
+
 Cano *criarCano(int x, int alturaTela, int alturaBuraco) {
     Cano* novo = malloc(sizeof(Cano));
 
@@ -42,9 +44,10 @@ void atualizarCanos(Cano** inicio) {
 void desenharCanos(Cano* inicio, int alturaTela) {
     while (inicio != NULL) {
         // Desenha o cano de cima
-        DrawRectangle(inicio->x, 0, 40, inicio->buracoY, GREEN);
+        DrawRectangle(inicio->x, 0, LARGURA_CANO, inicio->buracoY, GREEN);
         // Desenha o cano de baixo
-        DrawRectangle(inicio->x, inicio->buracoY + inicio->alturaBuraco, 40, alturaTela - (inicio->buracoY + inicio->alturaBuraco), GREEN);
+        DrawRectangle(inicio->x, inicio->buracoY + inicio->alturaBuraco, 
+                      LARGURA_CANO, alturaTela - (inicio->buracoY + inicio->alturaBuraco), GREEN);
 
         inicio = inicio->proximo;
     }
