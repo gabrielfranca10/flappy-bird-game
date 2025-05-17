@@ -13,7 +13,7 @@ void inicializarPassaro(Passaro* p, float x, float); //ok
 void pularPassaro(Passaro* p); //ok
 void atualizarPassaro(Passaro* p); //ok
 void pularPassaro(Passaro* p); //ok
-void desenharPassaro(Passaro* p); //ok
+void desenharPassaro(Passaro *p, Texture2D texture, float escala);
 bool checarColisao(Passaro* p, Cano* canos, int alturaTela); //ok
 
 
