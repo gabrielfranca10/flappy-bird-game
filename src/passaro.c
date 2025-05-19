@@ -40,8 +40,8 @@ void desenharPassaro(Passaro *p, Texture2D texture, float escala) {
 }
 
 bool checarColisao(Passaro* p, Cano* canos, int alturaTela) {
-    float margemX = p->largura * 0.2f;
-    float margemY = p->altura * 0.2f;
+    float margemX = p->largura * 0.20f;
+    float margemY = p->altura * 0.20f;
 
     float hitboxX = p->x + margemX;
     float hitboxY = p->y + margemY;

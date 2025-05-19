@@ -4,7 +4,7 @@
 #include "../include/cano.h"
 #include "raylib.h"
 
-#define LARGURA_CANO 40
+#define LARGURA_CANO 100
 #define MARGEM_TOPO_BASE 4  // Margem para evitar buracos colados nas bordas
 
 // Cria um novo cano com posição e buraco aleatórios

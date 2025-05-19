@@ -5,11 +5,11 @@
 #include "../include/cano.h"
 #include "../include/passaro.h"
 
-#define SCREEN_WIDTH 800
-#define SCREEN_HEIGHT 600
-#define ALTURA_BURACO 150
+#define SCREEN_WIDTH 1920
+#define SCREEN_HEIGHT 1080
+#define ALTURA_BURACO 250
 #define DISTANCIA_ENTRE_CANOS 300
-#define LARGURA_CANO 40
+#define LARGURA_CANO 100
 
 void salvarPontuacao(int pontos) {
     FILE* fscore = fopen("data/scores.txt", "a");
@@ -34,34 +34,29 @@ int main(void) {
     SetTargetFPS(60);
     srand(time(NULL));
 
-    // Carrega a textura do pássaro e define escala
+    Texture2D background = LoadTexture("resources/background.jpg");
     Texture2D birdTexture = LoadTexture("resources/bird.png");
-    float escalaPassaro = 0.045f;
+    float escalaPassaro = 0.25f;
 
-    // Pássaro
     Passaro passaro;
-    passaro.x = 100;
+    passaro.x = 1300;
     passaro.y = SCREEN_HEIGHT / 2;
     passaro.largura = birdTexture.width * escalaPassaro;
     passaro.altura = birdTexture.height * escalaPassaro;
     passaro.velocidadeY = 0;
 
-    // Canos
     Cano* listaCanos = NULL;
-    // REMOVE AS INICIALIZAÇÕES MANUAIS
-    // adicionarCano(&listaCanos, 400, SCREEN_HEIGHT, ALTURA_BURACO);
-    // adicionarCano(&listaCanos, 600, SCREEN_HEIGHT, ALTURA_BURACO);
-    // adicionarCano(&listaCanos, 800, SCREEN_HEIGHT, ALTURA_BURACO);
-
+    adicionarCano(&listaCanos, SCREEN_WIDTH, SCREEN_HEIGHT, ALTURA_BURACO);
     int framesDesdeUltimoCano = 0;
     int pontuacao = 0;
     bool gameOver = false;
 
-    // Adiciona o primeiro cano no início
-    adicionarCano(&listaCanos, SCREEN_WIDTH, SCREEN_HEIGHT, ALTURA_BURACO);
-    framesDesdeUltimoCano = 0;
-
     while (!WindowShouldClose()) {
+        BeginDrawing();
+        ClearBackground(RAYWHITE);
+
+        DrawTextureEx(background, (Vector2){0, 0}, 0.0f, 1.0f, WHITE);
+
         if (!gameOver) {
             atualizarPassaro(&passaro);
 
@@ -92,15 +87,9 @@ int main(void) {
             }
         }
 
-        BeginDrawing();
-        ClearBackground(RAYWHITE);
-
         desenharCanos(listaCanos, SCREEN_HEIGHT);
-
-        // Desenha o pássaro com textura e escala
         desenharPassaro(&passaro, birdTexture, escalaPassaro);
 
-        // Mostrar pontuação
         char textoPontuacao[20];
         sprintf(textoPontuacao, "Pontos: %d", pontuacao);
         DrawText(textoPontuacao, 20, 20, 30, DARKBLUE);
@@ -108,7 +97,7 @@ int main(void) {
         if (gameOver) {
             DrawText("Game Over! Pressione R para reiniciar", 180, 250, 30, RED);
             if (IsKeyPressed(KEY_R)) {
-                passaro.x = 100;
+                passaro.x = 1300;
                 passaro.y = SCREEN_HEIGHT / 2;
                 passaro.velocidadeY = 0;
                 gameOver = false;
@@ -116,7 +105,6 @@ int main(void) {
 
                 liberarCanos(listaCanos);
                 listaCanos = NULL;
-                // REPOSICIONA O PRIMEIRO CANO
                 adicionarCano(&listaCanos, SCREEN_WIDTH, SCREEN_HEIGHT, ALTURA_BURACO);
                 framesDesdeUltimoCano = 0;
             }
@@ -128,6 +116,7 @@ int main(void) {
 
     liberarCanos(listaCanos);
     UnloadTexture(birdTexture);
+    UnloadTexture(background);
     CloseWindow();
     return 0;
 }
