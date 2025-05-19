@@ -40,14 +40,22 @@ void desenharPassaro(Passaro *p, Texture2D texture, float escala) {
 }
 
 bool checarColisao(Passaro* p, Cano* canos, int alturaTela) {
-    if (p->y < 0 || p->y + p->altura > alturaTela) {
+    float margemX = p->largura * 0.2f;
+    float margemY = p->altura * 0.2f;
+
+    float hitboxX = p->x + margemX;
+    float hitboxY = p->y + margemY;
+    float hitboxLargura = p->largura - 2 * margemX;
+    float hitboxAltura  = p->altura  - 2 * margemY;
+
+    if (hitboxY < 0 || hitboxY + hitboxAltura > alturaTela) {
         return true;
     }
 
     Cano* atual = canos;
     while (atual != NULL) {
-        if (p->x + p->largura > atual->x && p->x < atual->x + LARGURA_CANO) {
-            if (p->y < atual->buracoY || p->y + p->altura > atual->buracoY + atual->alturaBuraco) {
+        if (hitboxX + hitboxLargura > atual->x && hitboxX < atual->x + LARGURA_CANO) {
+            if (hitboxY < atual->buracoY || hitboxY + hitboxAltura > atual->buracoY + atual->alturaBuraco) {
                 return true;
             }
         }

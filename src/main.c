@@ -48,13 +48,18 @@ int main(void) {
 
     // Canos
     Cano* listaCanos = NULL;
-    adicionarCano(&listaCanos, 400, SCREEN_HEIGHT, ALTURA_BURACO);
-    adicionarCano(&listaCanos, 600, SCREEN_HEIGHT, ALTURA_BURACO);
-    adicionarCano(&listaCanos, 800, SCREEN_HEIGHT, ALTURA_BURACO);
+    // REMOVE AS INICIALIZAÇÕES MANUAIS
+    // adicionarCano(&listaCanos, 400, SCREEN_HEIGHT, ALTURA_BURACO);
+    // adicionarCano(&listaCanos, 600, SCREEN_HEIGHT, ALTURA_BURACO);
+    // adicionarCano(&listaCanos, 800, SCREEN_HEIGHT, ALTURA_BURACO);
 
     int framesDesdeUltimoCano = 0;
     int pontuacao = 0;
     bool gameOver = false;
+
+    // Adiciona o primeiro cano no início
+    adicionarCano(&listaCanos, SCREEN_WIDTH, SCREEN_HEIGHT, ALTURA_BURACO);
+    framesDesdeUltimoCano = 0;
 
     while (!WindowShouldClose()) {
         if (!gameOver) {
@@ -111,9 +116,8 @@ int main(void) {
 
                 liberarCanos(listaCanos);
                 listaCanos = NULL;
-                adicionarCano(&listaCanos, 400, SCREEN_HEIGHT, ALTURA_BURACO);
-                adicionarCano(&listaCanos, 600, SCREEN_HEIGHT, ALTURA_BURACO);
-                adicionarCano(&listaCanos, 800, SCREEN_HEIGHT, ALTURA_BURACO);
+                // REPOSICIONA O PRIMEIRO CANO
+                adicionarCano(&listaCanos, SCREEN_WIDTH, SCREEN_HEIGHT, ALTURA_BURACO);
                 framesDesdeUltimoCano = 0;
             }
         }
