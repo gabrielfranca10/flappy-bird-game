@@ -5,8 +5,8 @@
 #include "../include/passaro.h"
 #include "../include/cano.h"
 
-#define GRAVIDADE 0.35f
-#define FORCA_PULO -7.0f
+#define GRAVIDADE 0.8f
+#define FORCA_PULO -10.0f
 #define VELOCIDADE_MAX 15.5f
 #define LARGURA_CANO 40
 
@@ -40,8 +40,8 @@ void desenharPassaro(Passaro *p, Texture2D texture, float escala) {
 }
 
 bool checarColisao(Passaro* p, Cano* canos, int alturaTela) {
-    float margemX = p->largura * 0.20f;
-    float margemY = p->altura * 0.20f;
+    float margemX = p->largura * 0.15f;
+    float margemY = p->altura * 0.15f;
 
     float hitboxX = p->x + margemX;
     float hitboxY = p->y + margemY;

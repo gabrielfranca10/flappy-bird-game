@@ -7,8 +7,8 @@
 
 #define SCREEN_WIDTH 1920
 #define SCREEN_HEIGHT 1080
-#define ALTURA_BURACO 250
-#define DISTANCIA_ENTRE_CANOS 300
+#define ALTURA_BURACO 300
+#define DISTANCIA_ENTRE_CANOS 500
 #define LARGURA_CANO 100
 
 void salvarPontuacao(int pontos) {
