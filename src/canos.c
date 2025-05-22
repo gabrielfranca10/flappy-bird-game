@@ -6,6 +6,7 @@
 
 #define LARGURA_CANO 100
 #define MARGEM_TOPO_BASE 4  // Margem para evitar buracos colados nas bordas
+#define VELOCIDADE_CANO 5
 
 // Cria um novo cano com posição e buraco aleatórios
 Cano *criarCano(int x, int alturaTela, int alturaBuraco) {
@@ -35,7 +36,7 @@ void atualizarCanos(Cano** inicio) {
     Cano* atual = *inicio;
 
     while (atual != NULL) {
-        atual->x--; // Move o cano para a esquerda
+        atual->x -= VELOCIDADE_CANO; // Move o cano para a esquerda
         atual = atual->proximo;
     }
 
