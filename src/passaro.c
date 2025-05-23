@@ -7,14 +7,11 @@
 #include "../include/cano.h"
 #include "../include/config.h"
 
-
-
 void inicializarPassaro(Passaro* p, float x, float y) {
     p->x = x;
     p->y = y;
     p->velocidadeY = 0;
 
-    
     p->frames[0] = LoadTexture("resources/bird2.png"); 
     p->frames[1] = LoadTexture("resources/bird3.png"); 
 
@@ -32,15 +29,18 @@ void atualizarPassaro(Passaro* p) {
     }
     p->y += p->velocidadeY;
 
-    
     if (p->velocidadeY < 0) {
         p->frameAtual = 1;  
     } else {
         p->frameAtual = 0;  
     }
 
-    
-    float alvoRotacao = (p->velocidadeY < 0) ? -30.0f : 90.0f;
+    float alvoRotacao;
+    if (p->velocidadeY < 0) {
+        alvoRotacao = -30.0f;
+    } else {
+        alvoRotacao = 90.0f;
+    }
     float velocidadeRotacao = 6.0f;
     p->rotacao += (alvoRotacao - p->rotacao) * velocidadeRotacao * GetFrameTime();
 
@@ -57,13 +57,23 @@ void desenharPassaro(Passaro *p, float escala) {
     p->largura = (int)(texture.width * escala);
     p->altura = (int)(texture.height * escala);
 
-    Vector2 origem = { p->largura / 2.0f, p->altura / 2.0f };
+    Vector2 origem;
+    origem.x = p->largura / 2.0f;
+    origem.y = p->altura / 2.0f;
 
-    Rectangle source = { 0.0f, 0.0f, (float)texture.width, (float)texture.height };
-    Rectangle dest = { p->x + p->largura / 2.0f, p->y + p->altura / 2.0f, p->largura, p->altura };
+    Rectangle source;
+    source.x = 0.0f;
+    source.y = 0.0f;
+    source.width = (float)texture.width;
+    source.height = (float)texture.height;
+
+    Rectangle dest;
+    dest.x = p->x + p->largura / 2.0f;
+    dest.y = p->y + p->altura / 2.0f;
+    dest.width = p->largura;
+    dest.height = p->altura;
 
     DrawTexturePro(texture, source, dest, origem, p->rotacao, WHITE);
-
 }
 
 void descarregarPassaro(Passaro* p) {
@@ -81,12 +91,10 @@ bool checarColisao(Passaro* p, Cano* canos, int alturaTela) {
     float hitboxLargura = p->largura - 2 * margemX;
     float hitboxAltura  = p->altura - 2 * margemY;
 
-    
     if (hitboxY < 0 || hitboxY + hitboxAltura > alturaTela) {
         return true;
     }
 
-    
     Cano* atual = canos;
     while (atual != NULL) {
         bool colisaoX = hitboxX + hitboxLargura > atual->x && hitboxX < atual->x + LARGURA_CANO;
