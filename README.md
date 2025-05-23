@@ -42,7 +42,7 @@ Veja as instruções detalhadas e dependências necessárias no [guia oficial da
 
     ```bash
     git clone https://github.com/gabrielfranca10/flappy-bird-game
-    ``
+    ``` 
 
 ### 🐧 Linux
 
