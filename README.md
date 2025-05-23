@@ -38,10 +38,11 @@ Veja as instruções detalhadas e dependências necessárias no [guia oficial da
 
 ## 🚀 Como Rodar o Jogo
 
-Clone o repositorio
-```bash
-git clone https://github.com/gabrielfranca10/flappy-bird-game
-`` 
+### Clone o repositorio
+
+    ```bash
+    git clone https://github.com/gabrielfranca10/flappy-bird-game
+    ``
 
 ### 🐧 Linux
 
