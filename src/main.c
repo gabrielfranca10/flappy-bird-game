@@ -20,20 +20,20 @@ int main(void) {
     SetTargetFPS(60);
     srand(time(NULL));
 
-    // Música de menu
     InitAudioDevice();
-    Music menuMusic = LoadMusicStream("resources/menu_music.mp3"); // Troque pelo nome do seu arquivo
+    Music menuMusic = LoadMusicStream("resources/menu_music.mp3"); 
     SetMusicVolume(menuMusic, 0.5f);
 
-    // Música do jogo
-    Music gameMusic = LoadMusicStream("resources/game_music.mp3"); // Troque pelo nome do seu arquivo
+    Music gameMusic = LoadMusicStream("resources/game_music.mp3");
     SetMusicVolume(gameMusic, 0.5f);
     bool gameMusicPlaying = false;
 
-    // Som da contagem
-    Sound countdownBeep = LoadSound("resources/countdown.wav"); // Troque pelo nome do seu arquivo
+    Sound countdownBeep = LoadSound("resources/countdown.wav");
 
     Texture2D background = LoadTexture("resources/background.png");
+
+    float fundoOffset = 0.0f;
+    float fundoVelocidade = 100.0f;
 
     Passaro passaro;
     inicializarPassaro(&passaro, 1300, SCREEN_HEIGHT / 2);
@@ -53,12 +53,18 @@ int main(void) {
     bool aumentando = true;
     int contagem = 4;
     float tempoContagem = 0.0f;
-    int ultimoValorContagem = 4; // Para controlar o beep
+    int ultimoValorContagem = 4; 
 
     while (!WindowShouldClose()) {
         float deltaTime = GetFrameTime();
 
-        // Controle da música do menu
+        if (estado == JOGO || estado == CONTAGEM) {
+            fundoOffset -= fundoVelocidade * deltaTime;
+            if (fundoOffset <= -background.width) {
+                fundoOffset = 0.0f;
+            }
+        }
+
         if (estado == MENU) {
             if (!IsMusicStreamPlaying(menuMusic)) {
                 PlayMusicStream(menuMusic);
@@ -70,7 +76,6 @@ int main(void) {
             }
         }
 
-        // Controle da música do jogo
         if (estado == JOGO) {
             if (!gameMusicPlaying) {
                 PlayMusicStream(gameMusic);
@@ -86,7 +91,9 @@ int main(void) {
 
         BeginDrawing();
         ClearBackground(RAYWHITE);
-        DrawTextureEx(background, (Vector2){0, 0}, 0.0f, 1.0f, WHITE);
+
+        DrawTextureEx(background, (Vector2){fundoOffset, 0}, 0.0f, 1.0f, WHITE);
+        DrawTextureEx(background, (Vector2){fundoOffset + background.width, 0}, 0.0f, 1.0f, WHITE);
 
         switch (estado) {
             case MENU: {
@@ -142,25 +149,24 @@ int main(void) {
                     tempoContagem = 0.0f;
                     ultimoValorContagem = 4;
                     estado = CONTAGEM;
-                    PlaySound(countdownBeep); // Toca o beep no início da contagem
+                    PlaySound(countdownBeep); 
                 }
                 break;
             }
             
             case CONTAGEM: {
-                // Desenha o número antes de decrementar
                 if (contagem > 0) {
                     char texto[16];
                     sprintf(texto, "%d", contagem);
                     desenharTextoCentralizado(texto, SCREEN_HEIGHT/2 - 50, 100, AZUL_CUSTOM);
                     desenharPassaro(&passaro, escalaPassaro);
                 } else {
-                    StopSound(countdownBeep); // Para o beep imediatamente ao começar o jogo
+                    StopSound(countdownBeep); 
                     estado = JOGO;
                 }
 
                 tempoContagem += deltaTime;
-                if (tempoContagem >= 0.6f) { // ajuste o tempo para o ritmo desejado
+                if (tempoContagem >= 0.6f) { 
                     contagem--;
                     tempoContagem = 0.0f;
                     if (contagem > 0) PlaySound(countdownBeep);
@@ -217,7 +223,7 @@ int main(void) {
                     contagem = 4;
                     tempoContagem = 0.0f;
                     ultimoValorContagem = 4;
-                    PlaySound(countdownBeep); // Toca o beep no início da contagem
+                    PlaySound(countdownBeep);
                 } else if (IsKeyPressed(KEY_ENTER)) {
                     liberarCanos(listaCanos);
                     listaCanos = NULL;
