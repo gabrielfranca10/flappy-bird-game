@@ -1,10 +1,12 @@
-# 🎮 Meu Jogo com Raylib
+# 🐦 Flappy Bird Game com Raylib
 
-Um jogo desenvolvido com **Raylib** utilizando os principais conceitos de C:
+Um jogo clássico desenvolvido com a biblioteca **Raylib** em C, explorando os principais conceitos da linguagem.
 
 ## 📹 Demonstração
 
-👉 [Assista ao vídeo do jogo rodando!](COLOQUE_AQUI_O_LINK_DO_VIDEO)
+[![Demonstração do Jogo](http://img.youtube.com/vi/<COLOQUE_AQUI_O_ID_DO_VIDEO>/0.jpg)](https://www.youtube.com/watch?v=<COLOQUE_AQUI_O_ID_DO_VIDEO>)
+
+👉 [Assista ao vídeo do jogo rodando!](https://www.youtube.com/watch?v=<COLOQUE_AQUI_O_ID_DO_VIDEO>)
 
 ---
 
@@ -20,76 +22,112 @@ Um jogo desenvolvido com **Raylib** utilizando os principais conceitos de C:
 
 ### 🐧 Linux
 
-1. Abra o terminal e vá para o diretório `build`:
+1.  Abra o terminal e vá para o diretório `build`:
 
-   ```bash
-   cd build
+    ```bash
+    cd build
+    ```
 
-    Gere os arquivos de build com premake:
+2.  Gere os arquivos de build com Premake:
 
-./premake5 gmake2
+    ```bash
+    ./premake5 gmake2
+    ```
 
-Volte para a raiz do projeto:
+3.  Volte para a raiz do projeto:
 
-cd ..
+    ```bash
+    cd ..
+    ```
 
-Compile o projeto:
+4.  Compile o projeto:
 
-    run make
+    ```bash
+    make
+    ```
 
-    run ./bin/Debug/flappy-bird-game
+5.  Execute o jogo:
 
-🍏 MacOS
+    ```bash
+    ./bin/Debug/flappy-bird-game
+    ```
 
-    Abra o terminal e vá para o diretório build:
+### 🍏 MacOS
 
-cd build
+1.  Abra o terminal e vá para o diretório `build`:
 
-Gere os arquivos de build:
+    ```bash
+    cd build
+    ```
 
-./premake5.osx gmake2
+2.  Gere os arquivos de build:
 
-Volte para a raiz:
+    ```bash
+    ./premake5.osx gmake2
+    ```
 
-cd ..
+3.  Volte para a raiz:
 
-Compile:
+    ```bash
+    cd ..
+    ```
 
-    run make
+4.  Compile:
 
-    run ./bin/Debug/flappy-bird-game
+    ```bash
+    make
+    ```
 
-🪟 Windows (MinGW-W64)
+5.  Execute o jogo:
 
-    Baixe o W64devkit ou use o MinGW-W64 que vem com o instalador do Raylib.
+    ```bash
+    ./bin/Debug/flappy-bird-game
+    ```
 
-    Adicione à sua variável de ambiente PATH:
+### 🪟 Windows (MinGW-W64)
 
-C:\raylib\w64devkit\bin
+1.  Baixe o [W64devkit](https://github.com/skeeto/w64devkit) ou use o MinGW-W64 que vem com o instalador do Raylib.
 
-No terminal, vá até a pasta build:
+2.  Adicione o diretório `bin` do MinGW-W64 à sua variável de ambiente `PATH`:
 
-cd build
+    ```
+    C:\raylib\w64devkit\bin
+    ```
 
-Gere os arquivos de build:
+3.  No terminal, vá até a pasta `build`:
 
-premake5.exe gmake2
+    ```bash
+    cd build
+    ```
 
-Volte para a raiz:
+4.  Gere os arquivos de build:
 
-cd ..
+    ```bash
+    premake5.exe gmake2
+    ```
 
-Compile com:
+5.  Volte para a raiz:
 
-    run mingw32-make.exe
+    ```bash
+    cd ..
+    ```
 
-    run bin\Debug\flappy-bird-game.exe
+6.  Compile com:
 
+    ```bash
+    mingw32-make.exe
+    ```
 
-⚙️ Recursos Usados
+7.  Execute o jogo:
 
-    Raylib - biblioteca gráfica
+    ```bash
+    bin\Debug\flappy-bird-game.exe
+    ```
 
-    Premake - para geração de Makefiles
+---
 
-    Make - para compilação
+## ⚙️ Recursos Usados
+
+-   [Raylib](https://www.raylib.com/) - biblioteca gráfica
+-   [Premake](https://premake.github.io/) - para geração de Makefiles
+-   [Make](https://www.gnu.org/software/make/) - para compilação
