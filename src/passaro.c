@@ -67,8 +67,6 @@ void desenharPassaro(Passaro *p, float escala) {
 
     DrawTexturePro(texture, source, dest, origem, p->rotacao, WHITE);
 
-    // Desenhar hitbox para debug
-    DrawRectangleLines(p->x, p->y, p->largura, p->altura, RED);
 }
 
 void descarregarPassaro(Passaro* p) {
