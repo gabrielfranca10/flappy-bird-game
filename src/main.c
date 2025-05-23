@@ -10,50 +10,79 @@
 
 typedef enum { MENU, PREPARADO, CONTAGEM, JOGO, GAME_OVER, HISTORICO, SAIR } EstadoJogo;
 
-
 const Color AZUL_CUSTOM = {53, 172, 176, 255};
 const char *OPCOES_MENU[] = {"Jogar", "Pontuações", "Sair"};
 const int NUM_OPCOES = 3;
 
 int main(void) {
-    
     InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Flappy Bird - Raylib");
     SetExitKey(KEY_NULL);
-    
     SetTargetFPS(60);
     srand(time(NULL));
 
-    
+    // Música de menu
+    InitAudioDevice();
+    Music menuMusic = LoadMusicStream("resources/menu_music.mp3"); // Troque pelo nome do seu arquivo
+    SetMusicVolume(menuMusic, 0.5f);
+
+    // Música do jogo
+    Music gameMusic = LoadMusicStream("resources/game_music.mp3"); // Troque pelo nome do seu arquivo
+    SetMusicVolume(gameMusic, 0.5f);
+    bool gameMusicPlaying = false;
+
+    // Som da contagem
+    Sound countdownBeep = LoadSound("resources/countdown.wav"); // Troque pelo nome do seu arquivo
+
     Texture2D background = LoadTexture("resources/background.png");
-    
-    
-    
-    
+
     Passaro passaro;
     inicializarPassaro(&passaro, 1300, SCREEN_HEIGHT / 2);
     const float escalaPassaro = 0.25f;
-    
+
     Cano* listaCanos = NULL;
     int framesDesdeUltimoCano = 0;
     int pontuacao = 0;
-    
-    
+
     EstadoJogo estado = MENU;
     int opcaoSelecionada = 0;
-    
-    
+
     char historico[MAX_HISTORICO][128];
     int linhasHistorico = 0;
-    
-    
+
     float titleScale = 1.0f;
     bool aumentando = true;
-    int contagem = 3;
+    int contagem = 4;
     float tempoContagem = 0.0f;
+    int ultimoValorContagem = 4; // Para controlar o beep
 
-    
     while (!WindowShouldClose()) {
         float deltaTime = GetFrameTime();
+
+        // Controle da música do menu
+        if (estado == MENU) {
+            if (!IsMusicStreamPlaying(menuMusic)) {
+                PlayMusicStream(menuMusic);
+            }
+            UpdateMusicStream(menuMusic);
+        } else {
+            if (IsMusicStreamPlaying(menuMusic)) {
+                StopMusicStream(menuMusic);
+            }
+        }
+
+        // Controle da música do jogo
+        if (estado == JOGO) {
+            if (!gameMusicPlaying) {
+                PlayMusicStream(gameMusic);
+                gameMusicPlaying = true;
+            }
+            UpdateMusicStream(gameMusic);
+        } else {
+            if (gameMusicPlaying) {
+                StopMusicStream(gameMusic);
+                gameMusicPlaying = false;
+            }
+        }
 
         BeginDrawing();
         ClearBackground(RAYWHITE);
@@ -61,7 +90,6 @@ int main(void) {
 
         switch (estado) {
             case MENU: {
-                
                 if (aumentando) {
                     titleScale += 0.005f;
                     if (titleScale >= 1.2f) aumentando = false;
@@ -70,14 +98,12 @@ int main(void) {
                     if (titleScale <= 1.0f) aumentando = true;
                 }
 
-                
                 const char *titulo = "FLAPPY BIRD";
                 int larguraTitulo = MeasureText(titulo, 60);
                 DrawTextEx(GetFontDefault(), titulo,
                           (Vector2){SCREEN_WIDTH/2 - larguraTitulo * titleScale/2 + 30, SCREEN_HEIGHT/2 - 500},
                           60 * titleScale, 2, AZUL_CUSTOM);
 
-                
                 for (int i = 0; i < NUM_OPCOES; i++) {
                     if (i == opcaoSelecionada) {
                         DrawRectangle(SCREEN_WIDTH/2 - 120, SCREEN_HEIGHT/2 - 50 + i * 70, 240, 50, Fade(LIGHTGRAY, 0.3f));
@@ -86,17 +112,13 @@ int main(void) {
                              SCREEN_HEIGHT/2 - 40 + i * 70, 40, AZUL_CUSTOM);
                 }
 
-                
                 if (IsKeyPressed(KEY_DOWN)) {
                     opcaoSelecionada++;
                     if (opcaoSelecionada >= NUM_OPCOES) opcaoSelecionada = 0;
-                    
                 } else if (IsKeyPressed(KEY_UP)) {
                     opcaoSelecionada--;
                     if (opcaoSelecionada < 0) opcaoSelecionada = NUM_OPCOES - 1;
-                    
                 } else if (IsKeyPressed(KEY_ENTER)) {
-                    
                     if (opcaoSelecionada == 0) {
                         estado = PREPARADO;
                     } else if (opcaoSelecionada == 1) {
@@ -116,51 +138,52 @@ int main(void) {
 
                 if (IsKeyPressed(KEY_SPACE)) {
                     reiniciarJogo(&passaro, &listaCanos, &pontuacao, &framesDesdeUltimoCano);
-                    contagem = 3;
+                    contagem = 4;
                     tempoContagem = 0.0f;
+                    ultimoValorContagem = 4;
                     estado = CONTAGEM;
+                    PlaySound(countdownBeep); // Toca o beep no início da contagem
                 }
                 break;
             }
             
             case CONTAGEM: {
-                tempoContagem += deltaTime;
-                if (tempoContagem >= 1.0f) {
-                    contagem--;
-                    tempoContagem = 0.0f;
-                }
-
-                if (contagem <= 0) {
-                    estado = JOGO;
-                } else {
+                // Desenha o número antes de decrementar
+                if (contagem > 0) {
                     char texto[16];
                     sprintf(texto, "%d", contagem);
                     desenharTextoCentralizado(texto, SCREEN_HEIGHT/2 - 50, 100, AZUL_CUSTOM);
+                    desenharPassaro(&passaro, escalaPassaro);
+                } else {
+                    StopSound(countdownBeep); // Para o beep imediatamente ao começar o jogo
+                    estado = JOGO;
                 }
-                desenharPassaro(&passaro, escalaPassaro);
+
+                tempoContagem += deltaTime;
+                if (tempoContagem >= 0.6f) { // ajuste o tempo para o ritmo desejado
+                    contagem--;
+                    tempoContagem = 0.0f;
+                    if (contagem > 0) PlaySound(countdownBeep);
+                }
                 break;
             }
             
             case JOGO: {
-                
                 atualizarPassaro(&passaro);
                 if (IsKeyPressed(KEY_SPACE)) pularPassaro(&passaro);
                 atualizarCanos(&listaCanos);
 
-                
                 framesDesdeUltimoCano++;
                 if (framesDesdeUltimoCano >= DISTANCIA_ENTRE_CANOS) {
                     adicionarCano(&listaCanos, SCREEN_WIDTH, SCREEN_HEIGHT, ALTURA_BURACO);
                     framesDesdeUltimoCano = 0;
                 }
 
-                
                 if (checarColisao(&passaro, listaCanos, SCREEN_HEIGHT)) {
                     estado = GAME_OVER;
                     salvarPontuacao(pontuacao);
                 }
 
-                
                 for (Cano* atual = listaCanos; atual != NULL; atual = atual->proximo) {
                     if (!atual->pontuado && atual->x + LARGURA_CANO < passaro.x) {
                         pontuacao++;
@@ -168,11 +191,9 @@ int main(void) {
                     }
                 }
 
-                
                 desenharCanos(listaCanos, SCREEN_HEIGHT);
                 desenharPassaro(&passaro, escalaPassaro);
 
-                
                 char textoPontuacao[20];
                 sprintf(textoPontuacao, "Pontos: %d", pontuacao);
                 DrawText(textoPontuacao, 20, 20, 30, AZUL_CUSTOM);
@@ -180,25 +201,23 @@ int main(void) {
             }
             
             case GAME_OVER: {
-                
                 desenharCanos(listaCanos, SCREEN_HEIGHT);
                 desenharPassaro(&passaro, escalaPassaro);
 
-                
                 char textoPontuacao[30];
                 sprintf(textoPontuacao, "Pontos: %d", pontuacao);
                 desenharTextoCentralizado(textoPontuacao, SCREEN_HEIGHT/2 - 100, 40, AZUL_CUSTOM);
 
-                
                 desenharTextoCentralizado("Game Over! Pressione ESPACO para reiniciar, ENTER para voltar ao menu ou ESC para sair.", 
                                          SCREEN_HEIGHT/2, 30, AZUL_CUSTOM);
 
-                
                 if (IsKeyPressed(KEY_SPACE)) {
                     reiniciarJogo(&passaro, &listaCanos, &pontuacao, &framesDesdeUltimoCano);
                     estado = CONTAGEM;
-                    contagem = 3;
+                    contagem = 4;
                     tempoContagem = 0.0f;
+                    ultimoValorContagem = 4;
+                    PlaySound(countdownBeep); // Toca o beep no início da contagem
                 } else if (IsKeyPressed(KEY_ENTER)) {
                     liberarCanos(listaCanos);
                     listaCanos = NULL;
@@ -233,6 +252,10 @@ cleanup:
     liberarCanos(listaCanos);
     descarregarPassaro(&passaro);
     UnloadTexture(background);
+    UnloadMusicStream(menuMusic);
+    UnloadMusicStream(gameMusic);
+    UnloadSound(countdownBeep);
+    CloseAudioDevice();
     CloseWindow();
 
     return 0;
