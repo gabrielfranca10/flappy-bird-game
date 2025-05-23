@@ -22,10 +22,11 @@ Um jogo clássico desenvolvido com a biblioteca **Raylib** em C, explorando os p
 
 Antes de compilar, instale as dependências da Raylib para o seu sistema operacional:
 
-### 🐧 Linux
+### 🐧 Linux (Dependencias)
 
-sudo apt install build-essential git
-sudo apt install libasound2-dev libx11-dev libxrandr-dev libxi-dev libgl1-mesa-dev libglu1-mesa-dev libxcursor-dev libxinerama-dev libwayland-dev libxkbcommon-dev
+1. sudo apt install build-essential git
+
+2. sudo apt install libasound2-dev libx11-dev libxrandr-dev libxi-dev libgl1-mesa-dev libglu1-mesa-dev libxcursor-dev libxinerama-dev libwayland-dev libxkbcommon-dev
 
 ### 🍏 MacOS
 
