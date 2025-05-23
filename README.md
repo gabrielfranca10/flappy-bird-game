@@ -13,6 +13,8 @@ Um jogo clássico desenvolvido com a biblioteca **Raylib** em C, explorando os p
 ## ✅ Plataforma Suportada
 
 - ✅ **Linux**
+- 🪟 **Windows**
+- 🍎 **macOS**
 
 ---
 
