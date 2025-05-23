@@ -58,7 +58,7 @@ cd ..
 ### 5. Compile o projeto:
 
 ```bash
-make
+ctrl+shift+b oumake
 ```
 
 ### 6. Execute o jogo:
