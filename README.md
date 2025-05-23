@@ -41,7 +41,7 @@ Veja as instruções detalhadas e dependências necessárias no [guia oficial da
 Clone o repositorio
 ```bash
 git clone https://github.com/gabrielfranca10/flappy-bird-game
-cd flappy-bird-game``` 
+`` 
 
 ### 🐧 Linux
 
