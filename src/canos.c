@@ -8,7 +8,7 @@
 #define MARGEM_TOPO_BASE 4  // Margem para evitar buracos colados nas bordas
 #define VELOCIDADE_CANO 5
 
-// Cria um novo cano com posição e buraco aleatórios
+// Cria um novo cano com posição e buraco aleatóriosssss
 Cano *criarCano(int x, int alturaTela, int alturaBuraco) {
     Cano* novo = malloc(sizeof(Cano));
     if (!novo) return NULL;
