@@ -1,3 +1,4 @@
+
 # Raylib-Quickstart
 A simple cross platform template for setting up a project with the bleeding edge raylib code.
 Works with C or C++.
@@ -60,6 +61,7 @@ DO NOT INSTALL ANOTHER MinGW-W64 from another source such as msys2, you don't ne
 * run `./premake5.osx gmake2`
 * CD back to the root
 * run `make`
+>>>>>>> main
 * you are good to go
 
 # Output files
@@ -109,3 +111,4 @@ applications, and to alter it and redistribute it freely, subject to the followi
   as being the original software.
 
   3. This notice may not be removed or altered from any source distribution.
+>>>>>>> main

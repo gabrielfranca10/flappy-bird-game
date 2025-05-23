@@ -14,6 +14,7 @@ newoption
 	default = "opengl33"
 }
 
+
 function download_progress(total, current)
     local ratio = current / total;
     ratio = math.min(math.max(ratio, 0), 1);
@@ -86,6 +87,7 @@ function platform_defines()
     filter{}
 end
 
+
 -- if you don't want to download raylib, then set this to false, and set the raylib dir to where you want raylib to be pulled from, must be full sources.
 downloadRaylib = true
 raylib_dir = "external/raylib-master"
@@ -101,6 +103,7 @@ if (os.isdir('build_files') == false) then
     os.mkdir('build_files')
 end
 
+
 if (os.isdir('external') == false) then
     os.mkdir('external')
 end
@@ -109,15 +112,18 @@ end
 workspace (workspaceName)
     location "../"
     configurations { "Debug", "Release", "Debug_RGFW", "Release_RGFW"}
+
     platforms { "x64", "x86", "ARM64"}
 
     defaultplatform ("x64")
+
 
     filter "configurations:Debug or Debug_RGFW"
         defines { "DEBUG" }
         symbols "On"
 
     filter "configurations:Release or Release_RGFW"
+
         defines { "NDEBUG" }
         optimize "On"
 
@@ -131,6 +137,7 @@ workspace (workspaceName)
 
     targetdir "bin/%{cfg.buildcfg}/"
 
+
 if (downloadRaylib) then
     build_externals()
 	end
@@ -142,6 +149,7 @@ if (downloadRaylib) then
         location "build_files/"
         targetdir "../bin/%{cfg.buildcfg}"
 
+
         filter {"system:windows", "configurations:Release or Release_RGFW", "action:gmake*"}
             kind "WindowedApp"
             buildoptions { "-Wl,--subsystem,windows" }
@@ -152,6 +160,7 @@ if (downloadRaylib) then
 
         filter "action:vs*"
             debugdir "$(SolutionDir)"
+
 
         filter{}
 
@@ -180,12 +189,16 @@ if (downloadRaylib) then
             defines{"_WINSOCK_DEPRECATED_NO_WARNINGS", "_CRT_SECURE_NO_WARNINGS"}
             dependson {"raylib"}
             links {"raylib.lib"}
+
             characterset ("Unicode")
+
             buildoptions { "/Zc:__cplusplus" }
 
         filter "system:windows"
             defines{"_WIN32"}
+
             links {"winmm", "gdi32", "opengl32"}
+
             libdirs {"../bin/%{cfg.buildcfg}"}
 
         filter "system:linux"
@@ -195,6 +208,7 @@ if (downloadRaylib) then
             links {"OpenGL.framework", "Cocoa.framework", "IOKit.framework", "CoreFoundation.framework", "CoreAudio.framework", "CoreVideo.framework", "AudioToolbox.framework"}
 
         filter{}
+
 		
 
     project "raylib"
@@ -209,6 +223,7 @@ if (downloadRaylib) then
 
         filter "action:vs*"
             defines{"_WINSOCK_DEPRECATED_NO_WARNINGS", "_CRT_SECURE_NO_WARNINGS"}
+
             characterset ("Unicode")
             buildoptions { "/Zc:__cplusplus" }
         filter{}
