@@ -24,7 +24,8 @@ Antes de compilar, instale as dependências da Raylib para o seu sistema operaci
 
 ### 🐧 Linux
 
-Veja as instruções detalhadas e dependências necessárias no [guia oficial da Raylib para Linux](https://github.com/raysan5/raylib/wiki/Working-on-GNU-Linux).
+sudo apt install build-essential git
+sudo apt install libasound2-dev libx11-dev libxrandr-dev libxi-dev libgl1-mesa-dev libglu1-mesa-dev libxcursor-dev libxinerama-dev libwayland-dev libxkbcommon-dev
 
 ### 🍏 MacOS
 
@@ -67,7 +68,7 @@ Veja as instruções detalhadas e dependências necessárias no [guia oficial da
 4.  Compile o projeto:
 
     ```bash
-    make
+    ctrl+shift+b no terminal
     ```
 
 5.  Execute o jogo:
