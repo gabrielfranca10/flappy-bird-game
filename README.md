@@ -18,6 +18,24 @@ Um jogo clássico desenvolvido com a biblioteca **Raylib** em C, explorando os p
 
 ---
 
+## 📦 Dependências
+
+Antes de compilar, instale as dependências da Raylib para o seu sistema operacional:
+
+### 🐧 Linux
+
+Veja as instruções detalhadas e dependências necessárias no [guia oficial da Raylib para Linux](https://github.com/raysan5/raylib/wiki/Working-on-GNU-Linux).
+
+### 🍏 MacOS
+
+Veja as instruções detalhadas e dependências necessárias no [guia oficial da Raylib para macOS](https://github.com/raysan5/raylib/wiki/Working-on-macOS).
+
+### 🪟 Windows
+
+Veja as instruções detalhadas e dependências necessárias no [guia oficial da Raylib para Windows](https://github.com/raysan5/raylib/wiki/Working-on-Windows).
+
+---
+
 ## 🚀 Como Rodar o Jogo
 
 ### 🐧 Linux
@@ -128,6 +146,6 @@ Um jogo clássico desenvolvido com a biblioteca **Raylib** em C, explorando os p
 
 ## ⚙️ Recursos Usados
 
--   [Raylib](https://www.raylib.com/) - biblioteca gráfica
--   [Premake](https://premake.github.io/) - para geração de Makefiles
--   [Make](https://www.gnu.org/software/make/) - para compilação
+- [Raylib](https://www.raylib.com/) - biblioteca gráfica
+- [Premake](https://premake.github.io/) - para geração de Makefiles
+- [Make](https://www.gnu.org/software/make/) - para compilação
