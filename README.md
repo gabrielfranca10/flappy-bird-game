@@ -13,6 +13,9 @@ Um jogo clássico desenvolvido com a biblioteca **Raylib** em C, explorando os p
 ## ✅ Plataforma Suportada
 
 - ✅ **Linux**
+- 🪟 **Windows**
+- 🍎 **macOS**
+
 ---
 
 ## 📦 Dependências
@@ -21,52 +24,72 @@ Antes de compilar, instale as dependências da Raylib para o seu sistema operaci
 
 ### 🐧 Linux (raylib-Dependencias)
 
-1. sudo apt install build-essential git
-
-2. sudo apt install libasound2-dev libx11-dev libxrandr-dev libxi-dev libgl1-mesa-dev libglu1-mesa-dev libxcursor-dev libxinerama-dev libwayland-dev libxkbcommon-dev
+```bash
+sudo apt install build-essential git
+sudo apt install libasound2-dev libx11-dev libxrandr-dev libxi-dev libgl1-mesa-dev libglu1-mesa-dev libxcursor-dev libxinerama-dev libwayland-dev libxkbcommon-dev
+```
 
 ---
 
 ## 🚀 Como Rodar o Jogo
 
-### Clone o repositorio
+### 1. Clone o repositório:
 
-    
-    git clone https://github.com/gabrielfranca10/flappy-bird-game
+```bash
+git clone https://github.com/gabrielfranca10/flappy-bird-game
+```
 
+### 2. Acesse o diretório `build`:
 
-1.  Abra o terminal e vá para o diretório `build`:
+```bash
+cd flappy-bird-game/build
+```
 
-    ```bash
-    cd build
-    ```
+### 3. Gere os arquivos de build com Premake:
 
-2.  Gere os arquivos de build com Premake:
+```bash
+./premake5 gmake2
+```
 
-    ```bash
-    ./premake5 gmake2
-    ```
+### 4. Volte para a raiz do projeto:
 
-3.  Volte para a raiz do projeto:
+```bash
+cd ..
+```
 
-    ```bash
-    cd ..
-    ```
+### 5. Compile o projeto:
 
-4.  Compile o projeto:
+```bash
+make
+```
 
-    ```bash
-    ctrl+shift+b no terminal
-    ```
+### 6. Execute o jogo:
 
-5.  Execute o jogo:
+```bash
+./bin/Debug/flappy-bird-game
+```
 
-    ```bash
-    ./bin/Debug/flappy-bird-game
-    ```
+---
+
+## 🎮 Como Jogar
+
+- Pressione a **barra de espaço** para fazer o pássaro voar.
+- O objetivo é **passar entre os canos** sem bater.
+- A cada cano ultrapassado, você **ganha pontos**.
+- O jogo termina quando o pássaro colide com um cano ou o chão.
+
+---
 
 ## ⚙️ Recursos Usados
 
-- [Raylib](https://www.raylib.com/) - biblioteca gráfica
-- [Premake](https://premake.github.io/) - para geração de Makefiles
-- [Make](https://www.gnu.org/software/make/) - para compilação
+- [Raylib](https://www.raylib.com/) — biblioteca gráfica  
+- [Premake](https://premake.github.io/) — geração de Makefiles  
+- [Make](https://www.gnu.org/software/make/) — compilação
+
+---
+
+## 👨‍💻 Equipe de Desenvolvimento
+
+- Fernando Soares da Silva  
+- Gabriel França de Albuquerque Pernambuco  
+- Luis Guilherme Alves Lauria Soares
