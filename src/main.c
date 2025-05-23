@@ -57,15 +57,15 @@ int main(void) {
 
     // Recursos gráficos
     Texture2D background = LoadTexture("resources/background.png");
-    Texture2D birdTexture = LoadTexture("resources/bird.png");
     const float escalaPassaro = 0.25f;
 
     // Sons
     Sound somSeleciona = LoadSound("resources/select.wav");
     Sound somMove = LoadSound("resources/move.wav");
 
-    // Passaro
-    Passaro passaro = {1300, SCREEN_HEIGHT / 2, birdTexture.width * escalaPassaro, birdTexture.height * escalaPassaro, 0};
+    // Passaro (agora animado)
+    Passaro passaro;
+    inicializarPassaro(&passaro, 1300, SCREEN_HEIGHT / 2);
 
     // Canos
     Cano* listaCanos = NULL;
@@ -175,7 +175,7 @@ int main(void) {
             }
 
             desenharCanos(listaCanos, SCREEN_HEIGHT);
-            desenharPassaro(&passaro, birdTexture, escalaPassaro);
+            desenharPassaro(&passaro, escalaPassaro);
 
             char textoPontuacao[20];
             sprintf(textoPontuacao, "Pontos: %d", pontuacao);
@@ -183,7 +183,7 @@ int main(void) {
         }
         else if (estado == GAME_OVER) {
             desenharCanos(listaCanos, SCREEN_HEIGHT);
-            desenharPassaro(&passaro, birdTexture, escalaPassaro);
+            desenharPassaro(&passaro, escalaPassaro);
 
             char textoPontuacao[20];
             sprintf(textoPontuacao, "Pontos: %d", pontuacao);
@@ -225,7 +225,7 @@ int main(void) {
 
     // Liberação de recursos
     liberarCanos(listaCanos);
-    UnloadTexture(birdTexture);
+    descarregarPassaro(&passaro);
     UnloadTexture(background);
     UnloadSound(somMove);
     UnloadSound(somSeleciona);
