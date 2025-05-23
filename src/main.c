@@ -5,6 +5,7 @@
 #include <string.h>
 #include "../include/cano.h"
 #include "../include/passaro.h"
+#include "../include/config.h"
 
 // Constantes
 #define SCREEN_WIDTH 1920
@@ -14,7 +15,7 @@
 #define LARGURA_CANO 100
 #define MAX_HISTORICO 10
 
-typedef enum { MENU, MENU_DIFICULDADE, PREPARADO, CONTAGEM, JOGO, GAME_OVER, HISTORICO, SAIR } EstadoJogo;
+typedef enum { MENU, PREPARADO, CONTAGEM, JOGO, GAME_OVER, HISTORICO, SAIR } EstadoJogo;
 
 // Cor personalizada azul #35acb0
 const Color azulCustom = {53, 172, 176, 255};
@@ -73,7 +74,7 @@ int main(void) {
     EstadoJogo estado = MENU;
     int opcaoSelecionada = 0;
     int pontuacao = 0;
-    int dificuldade = 1; // padrão médio
+    int dificuldade = 1; // fixa para médio, pode ajustar aqui se quiser
 
     // Histórico
     char historico[MAX_HISTORICO][128];
@@ -82,8 +83,6 @@ int main(void) {
     // Animação do título
     float titleScale = 1.0f;
     bool aumentando = true;
-
-    int opcaoDificuldadeSelecionada = dificuldade; // p/ destacar no menu dificuldade
 
     int contagem = 3;
     float tempoContagem = 0.0f;
@@ -108,13 +107,13 @@ int main(void) {
             const char *titulo = "FLAPPY BIRD";
             int larguraTitulo = MeasureText(titulo, 60);
             DrawTextEx(GetFontDefault(), titulo,
-                       (Vector2){SCREEN_WIDTH/2 - larguraTitulo * titleScale/2, SCREEN_HEIGHT/2 - 250},
+                       (Vector2){SCREEN_WIDTH/2 - larguraTitulo * titleScale/2 + 30, SCREEN_HEIGHT/2 - 500},
                        60 * titleScale, 2, azulCustom);
 
-            const char *opcoes[] = {"Jogar", "Pontuações", "Dificuldade", "Sair"};
+            const char *opcoes[] = {"Jogar", "Pontuações", "Sair"};
 
-            for (int i = 0; i < 4; i++) {
-                Color cor = (i == opcaoSelecionada) ? azulCustom : azulCustom;
+            for (int i = 0; i < 3; i++) {
+                Color cor = azulCustom;
 
                 if (i == opcaoSelecionada) {
                     DrawRectangle(SCREEN_WIDTH/2 - 120, SCREEN_HEIGHT/2 - 50 + i * 70, 240, 50, Fade(LIGHTGRAY, 0.3f));
@@ -124,10 +123,16 @@ int main(void) {
             }
 
             if (IsKeyPressed(KEY_DOWN)) {
-                opcaoSelecionada = (opcaoSelecionada + 1) % 4;
+                opcaoSelecionada = opcaoSelecionada + 1;
+                if (opcaoSelecionada >= 3) {
+                    opcaoSelecionada = 0;
+                }
                 PlaySound(somMove);
             } else if (IsKeyPressed(KEY_UP)) {
-                opcaoSelecionada = (opcaoSelecionada + 3) % 4;
+                opcaoSelecionada = opcaoSelecionada - 1;
+                if (opcaoSelecionada < 0) {
+                    opcaoSelecionada = 2;
+                }
                 PlaySound(somMove);
             } else if (IsKeyPressed(KEY_ENTER)) {
                 PlaySound(somSeleciona);
@@ -147,45 +152,8 @@ int main(void) {
                         fclose(f);
                     }
                 } else if (opcaoSelecionada == 2) {
-                    estado = MENU_DIFICULDADE;
-                    opcaoDificuldadeSelecionada = dificuldade;
-                } else if (opcaoSelecionada == 3) {
                     estado = SAIR;
                 }
-            }
-        }
-        else if (estado == MENU_DIFICULDADE) {
-            const char *titulo = "Selecione a Dificuldade";
-            int larguraTitulo = MeasureText(titulo, 50);
-            DrawText(titulo, SCREEN_WIDTH/2 - larguraTitulo/2, 100, 50, azulCustom);
-
-            const char *opcoesDificuldade[] = {"Facil", "Medio", "Dificil", "Voltar"};
-
-            for (int i = 0; i < 4; i++) {
-                Color cor = (i == opcaoDificuldadeSelecionada) ? azulCustom : azulCustom;
-
-                if (i == opcaoDificuldadeSelecionada) {
-                    DrawRectangle(SCREEN_WIDTH/2 - 120, 200 + i * 70, 240, 50, Fade(LIGHTGRAY, 0.3f));
-                }
-
-                DrawText(opcoesDificuldade[i], SCREEN_WIDTH/2 - MeasureText(opcoesDificuldade[i], 40)/2, 210 + i * 70, 40, cor);
-            }
-
-            if (IsKeyPressed(KEY_DOWN)) {
-                opcaoDificuldadeSelecionada = (opcaoDificuldadeSelecionada + 1) % 4;
-                PlaySound(somMove);
-            } else if (IsKeyPressed(KEY_UP)) {
-                opcaoDificuldadeSelecionada = (opcaoDificuldadeSelecionada + 3) % 4;
-                PlaySound(somMove);
-            } else if (IsKeyPressed(KEY_ENTER)) {
-                PlaySound(somSeleciona);
-                if (opcaoDificuldadeSelecionada == 3) {
-                    estado = MENU;
-                } else {
-                    dificuldade = opcaoDificuldadeSelecionada;
-                }
-            } else if (IsKeyPressed(KEY_ESCAPE)) {
-                estado = MENU;
             }
         }
         else if (estado == PREPARADO) {
@@ -228,6 +196,7 @@ int main(void) {
                 pularPassaro(&passaro);
             }
 
+            // Aqui chama atualizarCanos sem parâmetro, que usa dificuldade fixa internamente
             atualizarCanos(&listaCanos);
 
             framesDesdeUltimoCano++;
@@ -270,25 +239,28 @@ int main(void) {
 
             if (IsKeyPressed(KEY_SPACE)) {
                 reiniciarJogo(&passaro, &listaCanos, &pontuacao, &framesDesdeUltimoCano);
-                estado = PREPARADO;
-            } else if (IsKeyPressed(KEY_ENTER)) {
+                estado = CONTAGEM;
+                contagem = 3;
+                tempoContagem = 0.0f;
+            }
+            else if (IsKeyPressed(KEY_ENTER)) {
+                liberarCanos(listaCanos);
+                listaCanos = NULL;
                 estado = MENU;
-            } else if (IsKeyPressed(KEY_ESCAPE)) {
+                opcaoSelecionada = 0;
+            }
+            else if (IsKeyPressed(KEY_ESCAPE)) {
                 estado = SAIR;
             }
         }
         else if (estado == HISTORICO) {
-            const char *titulo = "Historico de Pontuacoes";
-            int largTitulo = MeasureText(titulo, 40);
-            DrawText(titulo, SCREEN_WIDTH/2 - largTitulo/2, 50, 40, azulCustom);
+            DrawText("Historico das Ultimas Pontuacoes:", 50, 50, 40, azulCustom);
 
             for (int i = 0; i < linhasHistorico; i++) {
-                DrawText(historico[i], 100, 100 + i * 40, 30, azulCustom);
+                DrawText(historico[i], 50, 100 + i * 30, 25, DARKGRAY);
             }
 
-            const char *msg = "Pressione ESC para voltar ao menu";
-            int largMsg = MeasureText(msg, 25);
-            DrawText(msg, SCREEN_WIDTH/2 - largMsg/2, SCREEN_HEIGHT - 60, 25, azulCustom);
+            DrawText("Pressione ESC para voltar", 50, SCREEN_HEIGHT - 50, 25, azulCustom);
 
             if (IsKeyPressed(KEY_ESCAPE)) {
                 estado = MENU;
@@ -301,13 +273,13 @@ int main(void) {
         EndDrawing();
     }
 
+    // Limpar tudo antes de sair
+    liberarCanos(listaCanos);
     UnloadTexture(background);
     UnloadSound(somSeleciona);
     UnloadSound(somMove);
     CloseAudioDevice();
     CloseWindow();
-
-    liberarCanos(listaCanos);
 
     return 0;
 }

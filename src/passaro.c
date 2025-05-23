@@ -5,11 +5,8 @@
 #include "raylib.h"
 #include "../include/passaro.h"
 #include "../include/cano.h"
+#include "../include/config.h"
 
-#define GRAVIDADE 0.8f
-#define FORCA_PULO -10.0f
-#define VELOCIDADE_MAX 15.5f
-#define LARGURA_CANO 40
 
 // Inicialização do pássaro
 void inicializarPassaro(Passaro* p, float x, float y) {
