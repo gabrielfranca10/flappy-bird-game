@@ -31,40 +31,37 @@ sudo apt install libasound2-dev libx11-dev libxrandr-dev libxi-dev libgl1-mesa-d
 
 ## 🚀 Como Rodar o Jogo
 
-### Clone o repositório:
+### 1. Clone o repositório:
 
 ```bash
 git clone https://github.com/gabrielfranca10/flappy-bird-game
 ```
 
-1. Abra o terminal e vá para o diretório `build`:
+### 2. Acesse o diretório `build`:
 
 ```bash
-cd build
+cd flappy-bird-game/build
 ```
 
-2. Gere os arquivos de build com Premake:
+### 3. Gere os arquivos de build com Premake:
 
 ```bash
 ./premake5 gmake2
 ```
 
-3. Volte para a raiz do projeto:
+### 4. Volte para a raiz do projeto:
 
 ```bash
 cd ..
 ```
 
-4. Compile o projeto:
-
-> Pressione `Ctrl+Shift+B` no terminal (se estiver usando VS Code com tasks)  
-> ou use o comando:
+### 5. Compile o projeto:
 
 ```bash
 make
 ```
 
-5. Execute o jogo:
+### 6. Execute o jogo:
 
 ```bash
 ./bin/Debug/flappy-bird-game
@@ -72,11 +69,20 @@ make
 
 ---
 
+## 🎮 Como Jogar
+
+- Pressione a **barra de espaço** para fazer o pássaro voar.
+- O objetivo é **passar entre os canos** sem bater.
+- A cada cano ultrapassado, você **ganha pontos**.
+- O jogo termina quando o pássaro colide com um cano ou o chão.
+
+---
+
 ## ⚙️ Recursos Usados
 
 - [Raylib](https://www.raylib.com/) — biblioteca gráfica  
 - [Premake](https://premake.github.io/) — geração de Makefiles  
-- [Make](https://www.gnu.org/software/make/) — compilação  
+- [Make](https://www.gnu.org/software/make/) — compilação
 
 ---
 
