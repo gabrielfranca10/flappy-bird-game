@@ -14,7 +14,7 @@
 #define LARGURA_CANO 100
 #define MAX_HISTORICO 10
 
-typedef enum { MENU, PREPARADO, CONTAGEM, JOGO, GAME_OVER, HISTORICO, SAIR } EstadoJogo;
+typedef enum { MENU, MENU_DIFICULDADE, PREPARADO, CONTAGEM, JOGO, GAME_OVER, HISTORICO, SAIR } EstadoJogo;
 
 // Cor personalizada azul #35acb0
 const Color azulCustom = {53, 172, 176, 255};
@@ -53,31 +53,27 @@ void reiniciarJogo(Passaro *passaro, Cano **listaCanos, int *pontuacao, int *fra
 
 int main(void) {
     InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Flappy Bird - Raylib");
-    SetExitKey(KEY_NULL);  // <- Impede ESC de fechar o jogo automaticamente
+    SetExitKey(KEY_NULL);
     InitAudioDevice();
     SetTargetFPS(60);
     srand(time(NULL));
 
-    // Recursos gráficos
     Texture2D background = LoadTexture("resources/background.png");
     const float escalaPassaro = 0.25f;
 
-    // Sons
     Sound somSeleciona = LoadSound("resources/select.wav");
     Sound somMove = LoadSound("resources/move.wav");
 
-    // Passaro (agora animado)
     Passaro passaro;
     inicializarPassaro(&passaro, 1300, SCREEN_HEIGHT / 2);
 
-    // Canos
     Cano* listaCanos = NULL;
     int framesDesdeUltimoCano = 0;
 
-    // Estado do jogo
     EstadoJogo estado = MENU;
     int opcaoSelecionada = 0;
     int pontuacao = 0;
+    int dificuldade = 1; // padrão médio
 
     // Histórico
     char historico[MAX_HISTORICO][128];
@@ -87,9 +83,10 @@ int main(void) {
     float titleScale = 1.0f;
     bool aumentando = true;
 
-    // Controle da contagem regressiva
+    int opcaoDificuldadeSelecionada = dificuldade; // p/ destacar no menu dificuldade
+
     int contagem = 3;
-    float tempoContagem = 0.0f; // acumulador de tempo para contar 1s
+    float tempoContagem = 0.0f;
 
     while (!WindowShouldClose()) {
         float deltaTime = GetFrameTime();
@@ -99,7 +96,7 @@ int main(void) {
         DrawTextureEx(background, (Vector2){0, 0}, 0.0f, 1.0f, WHITE);
 
         if (estado == MENU) {
-            // Animação do título
+            // Animação título
             if (aumentando) {
                 titleScale += 0.005f;
                 if (titleScale >= 1.2f) aumentando = false;
@@ -114,9 +111,9 @@ int main(void) {
                        (Vector2){SCREEN_WIDTH/2 - larguraTitulo * titleScale/2, SCREEN_HEIGHT/2 - 250},
                        60 * titleScale, 2, azulCustom);
 
-            const char *opcoes[] = {"Jogar", "Pontuações", "Sair"};
+            const char *opcoes[] = {"Jogar", "Pontuações", "Dificuldade", "Sair"};
 
-            for (int i = 0; i < 3; i++) {
+            for (int i = 0; i < 4; i++) {
                 Color cor = (i == opcaoSelecionada) ? azulCustom : azulCustom;
 
                 if (i == opcaoSelecionada) {
@@ -127,10 +124,10 @@ int main(void) {
             }
 
             if (IsKeyPressed(KEY_DOWN)) {
-                opcaoSelecionada = (opcaoSelecionada + 1) % 3;
+                opcaoSelecionada = (opcaoSelecionada + 1) % 4;
                 PlaySound(somMove);
             } else if (IsKeyPressed(KEY_UP)) {
-                opcaoSelecionada = (opcaoSelecionada + 2) % 3;
+                opcaoSelecionada = (opcaoSelecionada + 3) % 4;
                 PlaySound(somMove);
             } else if (IsKeyPressed(KEY_ENTER)) {
                 PlaySound(somSeleciona);
@@ -150,12 +147,48 @@ int main(void) {
                         fclose(f);
                     }
                 } else if (opcaoSelecionada == 2) {
+                    estado = MENU_DIFICULDADE;
+                    opcaoDificuldadeSelecionada = dificuldade;
+                } else if (opcaoSelecionada == 3) {
                     estado = SAIR;
                 }
             }
         }
+        else if (estado == MENU_DIFICULDADE) {
+            const char *titulo = "Selecione a Dificuldade";
+            int larguraTitulo = MeasureText(titulo, 50);
+            DrawText(titulo, SCREEN_WIDTH/2 - larguraTitulo/2, 100, 50, azulCustom);
+
+            const char *opcoesDificuldade[] = {"Facil", "Medio", "Dificil", "Voltar"};
+
+            for (int i = 0; i < 4; i++) {
+                Color cor = (i == opcaoDificuldadeSelecionada) ? azulCustom : azulCustom;
+
+                if (i == opcaoDificuldadeSelecionada) {
+                    DrawRectangle(SCREEN_WIDTH/2 - 120, 200 + i * 70, 240, 50, Fade(LIGHTGRAY, 0.3f));
+                }
+
+                DrawText(opcoesDificuldade[i], SCREEN_WIDTH/2 - MeasureText(opcoesDificuldade[i], 40)/2, 210 + i * 70, 40, cor);
+            }
+
+            if (IsKeyPressed(KEY_DOWN)) {
+                opcaoDificuldadeSelecionada = (opcaoDificuldadeSelecionada + 1) % 4;
+                PlaySound(somMove);
+            } else if (IsKeyPressed(KEY_UP)) {
+                opcaoDificuldadeSelecionada = (opcaoDificuldadeSelecionada + 3) % 4;
+                PlaySound(somMove);
+            } else if (IsKeyPressed(KEY_ENTER)) {
+                PlaySound(somSeleciona);
+                if (opcaoDificuldadeSelecionada == 3) {
+                    estado = MENU;
+                } else {
+                    dificuldade = opcaoDificuldadeSelecionada;
+                }
+            } else if (IsKeyPressed(KEY_ESCAPE)) {
+                estado = MENU;
+            }
+        }
         else if (estado == PREPARADO) {
-            // Tela "Preparado para jogar?"
             const char *msg = "Preparado para jogar? Pressione ESPACO para iniciar!";
             int larg = MeasureText(msg, 40);
             DrawText(msg, SCREEN_WIDTH/2 - larg/2, SCREEN_HEIGHT/2 - 50, 40, azulCustom);
@@ -170,7 +203,6 @@ int main(void) {
             }
         }
         else if (estado == CONTAGEM) {
-            // Mostra a contagem regressiva na tela
             tempoContagem += deltaTime;
 
             if (tempoContagem >= 1.0f) {
@@ -209,7 +241,6 @@ int main(void) {
                 salvarPontuacao(pontuacao);
             }
 
-            // Atualiza pontuação
             for (Cano* atual = listaCanos; atual != NULL; atual = atual->proximo) {
                 if (!atual->pontuado && atual->x + LARGURA_CANO < passaro.x) {
                     pontuacao++;
@@ -247,16 +278,19 @@ int main(void) {
             }
         }
         else if (estado == HISTORICO) {
-            DrawText("Histórico de Pontuações:", SCREEN_WIDTH/2 - 150, 50, 30, azulCustom);
+            const char *titulo = "Historico de Pontuacoes";
+            int largTitulo = MeasureText(titulo, 40);
+            DrawText(titulo, SCREEN_WIDTH/2 - largTitulo/2, 50, 40, azulCustom);
+
             for (int i = 0; i < linhasHistorico; i++) {
-                DrawText(historico[i], SCREEN_WIDTH/2 - 200, 100 + i * 25, 20, Fade(azulCustom, 0.6f));
+                DrawText(historico[i], 100, 100 + i * 40, 30, azulCustom);
             }
 
-            const char *msg = "Pressione ENTER ou ESC para voltar ao menu.";
-            int larg = MeasureText(msg, 25);
-            DrawText(msg, SCREEN_WIDTH/2 - larg/2, SCREEN_HEIGHT - 100, 25, azulCustom);
+            const char *msg = "Pressione ESC para voltar ao menu";
+            int largMsg = MeasureText(msg, 25);
+            DrawText(msg, SCREEN_WIDTH/2 - largMsg/2, SCREEN_HEIGHT - 60, 25, azulCustom);
 
-            if (IsKeyPressed(KEY_ESCAPE) || IsKeyPressed(KEY_ENTER)) {
+            if (IsKeyPressed(KEY_ESCAPE)) {
                 estado = MENU;
             }
         }
@@ -264,18 +298,16 @@ int main(void) {
             break;
         }
 
-        DrawText("Flappy Bird (Raylib)", 20, SCREEN_HEIGHT - 40, 20, Fade(azulCustom, 0.7f));
         EndDrawing();
     }
 
-    // Liberação de recursos
-    liberarCanos(listaCanos);
-    descarregarPassaro(&passaro);
     UnloadTexture(background);
-    UnloadSound(somMove);
     UnloadSound(somSeleciona);
+    UnloadSound(somMove);
     CloseAudioDevice();
     CloseWindow();
+
+    liberarCanos(listaCanos);
 
     return 0;
 }
