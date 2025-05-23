@@ -4,9 +4,7 @@ Um jogo clássico desenvolvido com a biblioteca **Raylib** em C, explorando os p
 
 ## 📹 Demonstração
 
-[![Demonstração do Jogo](http://img.youtube.com/vi/<COLOQUE_AQUI_O_ID_DO_VIDEO>/0.jpg)](https://www.youtube.com/watch?v=<COLOQUE_AQUI_O_ID_DO_VIDEO>)
-
-👉 [Assista ao vídeo do jogo rodando!](https://www.youtube.com/watch?v=<COLOQUE_AQUI_O_ID_DO_VIDEO>)
+[![Demonstração do Jogo]([http://img.youtube.com/vi/<COLOQUE_AQUI_O_ID_DO_VIDEO>/0.jpg](https://youtu.be/MuBmDDfsPHM))](https://www.youtube.com/watch?v=<COLOQUE_AQUI_O_ID_DO_VIDEO>)
 
 ---
 
