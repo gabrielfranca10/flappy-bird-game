@@ -10,6 +10,7 @@
 	},
 	"files.associations": {
 		"stdio.h": "c",
-		"config.h": "c"
+		"config.h": "c",
+		"cano.h": "c"
 	}
 }

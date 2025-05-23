@@ -1,27 +1,27 @@
 #include <stdbool.h>
 #include <stdlib.h>
 #include <stdio.h>
-#include <math.h>  // Para fabs
+#include <math.h>  
 #include "raylib.h"
 #include "../include/passaro.h"
 #include "../include/cano.h"
 #include "../include/config.h"
 
 
-// Inicialização do pássaro
+
 void inicializarPassaro(Passaro* p, float x, float y) {
     p->x = x;
     p->y = y;
     p->velocidadeY = 0;
 
-    // Agora só duas texturas: bird2 e bird3
-    p->frames[0] = LoadTexture("resources/bird2.png"); // Queda
-    p->frames[1] = LoadTexture("resources/bird3.png"); // Pulo
+    
+    p->frames[0] = LoadTexture("resources/bird2.png"); 
+    p->frames[1] = LoadTexture("resources/bird3.png"); 
 
     p->largura = p->frames[0].width;
     p->altura = p->frames[0].height;
 
-    p->frameAtual = 0;  // Começa caindo
+    p->frameAtual = 0;  
     p->rotacao = 0.0f;
 }
 
@@ -32,14 +32,14 @@ void atualizarPassaro(Passaro* p) {
     }
     p->y += p->velocidadeY;
 
-    // Troca de frame baseado na velocidade vertical
+    
     if (p->velocidadeY < 0) {
-        p->frameAtual = 1;  // Pulando (bird3.png)
+        p->frameAtual = 1;  
     } else {
-        p->frameAtual = 0;  // Caindo (bird2.png)
+        p->frameAtual = 0;  
     }
 
-    // Rotação suave igual antes
+    
     float alvoRotacao = (p->velocidadeY < 0) ? -30.0f : 90.0f;
     float velocidadeRotacao = 6.0f;
     p->rotacao += (alvoRotacao - p->rotacao) * velocidadeRotacao * GetFrameTime();
@@ -67,7 +67,7 @@ void desenharPassaro(Passaro *p, float escala) {
 }
 
 void descarregarPassaro(Passaro* p) {
-    for (int i = 0; i < 2; i++) {  // só 2 texturas
+    for (int i = 0; i < 2; i++) {  
         UnloadTexture(p->frames[i]);
     }
 }
@@ -81,12 +81,12 @@ bool checarColisao(Passaro* p, Cano* canos, int alturaTela) {
     float hitboxLargura = p->largura - 2 * margemX;
     float hitboxAltura  = p->altura - 2 * margemY;
 
-    // Colisão com o chão ou teto
+    
     if (hitboxY < 0 || hitboxY + hitboxAltura > alturaTela) {
         return true;
     }
 
-    // Colisão com os canos
+    
     Cano* atual = canos;
     while (atual != NULL) {
         bool colisaoX = hitboxX + hitboxLargura > atual->x && hitboxX < atual->x + LARGURA_CANO;

@@ -1,7 +1,6 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 
-// Constantes do jogo
 #define SCREEN_WIDTH 1920
 #define SCREEN_HEIGHT 1080
 #define LARGURA_CANO 100
@@ -11,9 +10,9 @@
 #define VELOCIDADE_CANO 5
 #define MAX_HISTORICO 10
 
-// Constantes do pássaro
+
 #define GRAVIDADE 0.8f
 #define FORCA_PULO -12.0f
 #define VELOCIDADE_MAX 15.5f
 
-#endif // CONFIG_H
+#endif 
