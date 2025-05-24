@@ -89,3 +89,7 @@ ctrl+shift+b ou make
 - Fernando Soares da Silva  
 - Gabriel França de Albuquerque Pernambuco  
 - Luis Guilherme Alves Lauria Soares
+
+## SLIDES
+
+- https://www.canva.com/design/DAGl9oDItTA/czAjUKksZqC44ttbDm5qhw/edit
